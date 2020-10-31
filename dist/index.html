@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><!--[if IE]><link rel="icon" href="/favicon.ico"><![endif]--><title>larryseshandis</title><link href="/css/app.61378bde.css" rel="preload" as="style"><link href="/js/app.547e7cb7.js" rel="preload" as="script"><link href="/js/chunk-vendors.b08775bb.js" rel="preload" as="script"><link href="/css/app.61378bde.css" rel="stylesheet"><link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/img/icons/favicon-16x16.png"><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#4DBA87"><meta name="apple-mobile-web-app-capable" content="no"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="larryseshandis"><link rel="apple-touch-icon" href="/img/icons/apple-touch-icon-152x152.png"><link rel="mask-icon" href="/img/icons/safari-pinned-tab.svg" color="#4DBA87"><meta name="msapplication-TileImage" content="/img/icons/msapplication-icon-144x144.png"><meta name="msapplication-TileColor" content="#000000"></head><body><script id="plane-vs" type="x-shader/x-vertex">#ifdef GL_ES
+      precision mediump float;
+      #endif
+      
+      // those are the mandatory attributes that the lib sets
+      attribute vec3 aVertexPosition;
+      attribute vec2 aTextureCoord;
+      
+      // those are mandatory uniforms that the lib sets and that contain our model view and projection matrix
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;
+      
+      // our texture matrix that will handle image cover
+      uniform mat4 uTextureMatrix0;
+      
+      // pass your vertex and texture coords to the fragment shader
+      varying vec3 vVertexPosition;
+      varying vec2 vTextureCoord;
+      
+      void main() {       
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+          
+          // set the varyings
+          // here we use our texture matrix to calculate the accurate texture coords
+          vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
+          vVertexPosition = aVertexPosition;
+      }</script><script id="plane-fs" type="x-shader/x-fragment">#ifdef GL_ES
+        precision mediump float;
+        #endif
+        
+        // get our varyings
+        varying vec3 vVertexPosition;
+        varying vec2 vTextureCoord;
+        
+        // the uniform we declared inside our javascript
+        uniform float uTime;
+        
+        // our texture sampler (default name, to use a different name please refer to the documentation)
+        uniform sampler2D uSampler0;
+        
+        void main() {
+            // get our texture coords from our varying
+            vec2 textureCoord = vTextureCoord;
+            
+            // displace our pixels along the X axis based on our time uniform
+            // textures coords are ranging from 0.0 to 1.0 on both axis
+            textureCoord.x += sin(textureCoord.y * 25.0) * cos(textureCoord.x * 25.0) * (cos(uTime / 50.0)) / 25.0;
+            
+            // map our texture with the texture matrix coords
+            gl_FragColor = texture2D(uSampler0, textureCoord);
+        }</script><noscript><strong>We're sorry but larryseshandis doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="/js/chunk-vendors.b08775bb.js"></script><script src="/js/app.547e7cb7.js"></script></body></html>
